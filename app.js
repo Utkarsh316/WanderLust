@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname,"/public")));
 //path.join() then safely adds /public to that path.
 
 app.get( "/", (req,res) => {
-    res.send("Hi, I am root");
+    res.send("Hi, I am home");
 });
 
 
