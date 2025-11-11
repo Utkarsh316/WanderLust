@@ -1,0 +1,8 @@
+# Dependencies
+/node_modules
+
+# Environment Variables (for your MongoDB keys, etc.)
+.env
+
+# Logs
+*.log
