@@ -38,6 +38,10 @@ router.get("/new", (req, res) => {
 router.get("/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews");
+    if(!listing){
+      req.flash("error", "This Listing does not exist"); 
+      return res.redirect ("/listings");
+    }
     res.render("listings/show.ejs", { listing });
 })
 );
@@ -62,6 +66,11 @@ router.post(
 router.get("/:id/edit", wrapAsync(async (req, res) => {
     let { id } = req.params;                        //id nikali from whole url
     const listing = await Listing.findById(id);    // go in Listing clln and find data with this specifi id
+    if(!listing){
+      req.flash("error", "This Listing does not exist"); 
+      return res.redirect ("/listings");
+    }
+   
     res.render("listings/edit.ejs", { listing });    // found data is put in the template
     //res.render(): This command tells Express to generate an HTML page using a template. "listings/edit.ejs": 
     // This is the template file it will use. This file contains the HTML for your edit form. {listing}: This is the crucial part. 
@@ -90,7 +99,7 @@ router.put(
 router.delete("/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
-    console.log(deletedListing);
+   
     req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
 })
