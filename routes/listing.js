@@ -4,7 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing.js");
-
+const {isLoggedIn} = require("../middleware.js");
 
 
 
@@ -28,11 +28,10 @@ router.get("/", wrapAsync(async (req, res) => {
 }));
 
 //New Route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {       
     res.render("listings/new.ejs");
-}
 
-)
+});
 
 //show route
 router.get("/:id", wrapAsync(async (req, res) => {
@@ -49,6 +48,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
 // Create Route
 router.post(
     "/",
+    isLoggedIn,
     validateListing,
     wrapAsync(async (req, res, next) => {
 
@@ -63,7 +63,10 @@ router.post(
 
 //Edit Route
 //Purpose: To fetch the existing data for one specific item from the database and display it in an HTML form so the user can edit it.
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get(
+    "/:id/edit",
+    isLoggedIn,
+     wrapAsync(async (req, res) => {
     let { id } = req.params;                        //id nikali from whole url
     const listing = await Listing.findById(id);    // go in Listing clln and find data with this specifi id
     if(!listing){
@@ -81,6 +84,7 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 //Purpose: To receive the new, modified data that the user submitted through the form and use it to update the database.
 router.put(
     "/:id",
+    isLoggedIn,
     validateListing,
     wrapAsync(async (req, res) => {
 
@@ -96,7 +100,9 @@ router.put(
     }));
 
 //Delete Route
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete("/:id",
+    isLoggedIn,
+     wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
    
