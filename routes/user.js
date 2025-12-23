@@ -22,7 +22,7 @@ router.post(
         return next(err);
       }
       req.flash("success", "Welcome to Wanderlust!");
-      res.redirect("/listings");
+      res.redirect("/listings");s
     });
     } catch (e) {
       req.flash("error", e.message);
@@ -42,9 +42,10 @@ router.post(
     failureRedirect: "/login",
     failureFlash: true,
   }),
+
  async (req, res) => {
   req.flash("success", "Welcome back to Wanderlust!");
-  res.redirect("req.locals.redirectUrl");
+  res.redirect(res.locals.redirectUrl || "/listings");
 }
 );
 
