@@ -1,5 +1,9 @@
 // Your app.js file is your server. In a Node.js/Express application, it's the central control hub. 
 // Its main job is to listen for requests from the browser and decide what to send back.
+if(process.env.NODE_ENV != "production") {
+   require('dotenv').config();
+}
+
 
 const express = require( "express");
 const app = express();

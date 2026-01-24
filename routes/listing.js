@@ -5,27 +5,36 @@ const Listing = require("../models/listing.js");
 const {isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
 const listingController = require("../controllers/listings.js");
+const multer  = require('multer')
+const { storage } = require("../cloudConfig.js");
+const upload = multer({ storage });
 
-
-
-
-//index route
-router.get("/", wrapAsync(listingController.index));
-
+router
+  .route("/")
+  .get(wrapAsync(listingController.index))
+  .post(
+    isLoggedIn,
+    upload.single("listing[image]"),
+        validateListing,
+    wrapAsync(listingController.createListing)
+  );
+  
 //New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm );
 
-//show route
-router.get("/:id", wrapAsync(listingController.showListing)
-);
-
-// Create Route
-router.post(
-    "/",
+router
+  .route("/:id")
+  .get(wrapAsync(listingController.showListing)) //show route
+  .put(                                          //update route
     isLoggedIn,
+    isOwner,
     validateListing,
-    wrapAsync(listingController.createListing)
-);
+    wrapAsync(listingController.updateListing)
+  )
+  .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));  //Delete Route
+
+
+
 
 //Edit Route
 //Purpose: To fetch the existing data for one specific item from the database and display it in an HTML form so the user can edit it.
@@ -33,23 +42,8 @@ router.get(
     "/:id/edit",
     isLoggedIn,
     isOwner,
-     wrapAsync(listingController.renderEditForm))
-
-//Update route
-//Purpose: To receive the new, modified data that the user submitted through the form and use it to update the database.
-router.put(
-    "/:id",
-    isLoggedIn,
-    isOwner,
-    validateListing,
-    wrapAsync(listingController.updateListing));
-
-    //Delete Route
-    router.delete(
-        "/:id",
-        isLoggedIn,
-        isOwner,
-        wrapAsync(listingController.destroyListing)
+     wrapAsync(listingController.renderEditForm)
     );
+
 
 module.exports = router;
