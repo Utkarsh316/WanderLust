@@ -28,7 +28,10 @@
 
         <div class="mb-3">
             <label for="image" class="form-label"> Upload Image </label> 
-            <input name="listing[image]"  type="file" class="form-control" />
+            <input name="listing[image]"  type="file" class="form-control" 
+            required
+            />
+
         </div>
 
         <div class="row">
@@ -38,7 +41,7 @@
              name="listing[price]" 
              placeholder="Enter price" 
              type="number" 
-             class="form-control"
+             class="form-control" 
              required
              />
             <div class="invalid-feedback">Please enter a valid Price</div>
